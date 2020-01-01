@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServiceService } from '../Service/service.service';
-import {Campana} from '../interfaces/campana';
+import {Carga} from '../interfaces/carga';
 
 @Component({
   selector: 'app-agregar',
@@ -9,20 +9,26 @@ import {Campana} from '../interfaces/campana';
   styleUrls: ['./agregar.component.css']
 })
 export class AgregarComponent implements OnInit {
-  //se crea el objeto campana para que sea referenciado por ngModel 
+  //se crea el objeto carga para que sea referenciado por ngModel 
   //y al enviar el fomurlario se cargen estos parametros
-  campana:Campana = new Campana()  
+  carga:Carga = new Carga()  
   constructor(private router:Router,private service:ServiceService) { }
 
   ngOnInit() {
   }
 
   Guardar(){
-    this.service.createCampana(this.campana)
-    .subscribe(data=>{
-      alert("Se agrego con Exito...!!!");
-      this.router.navigate(["listar"]);
-    });
+    
+    if((this.carga.frecuencia!= undefined && !(/^\s+|\s+$/.test(this.carga.frecuencia.toString()))) && (this.carga.hora!= undefined && !(/^\s+|\s+$/.test(this.carga.hora.toString())))) {
+      this.service.createCarga(this.carga)
+        .subscribe(data=>{
+          alert("Se agrego con Exito...!!!");
+          this.router.navigate(["listar"]);
+        });
+    }else{
+      alert("Uno de los dos campos esta vacio o tiene espacios al inicio o al final");
+    }
+    
   }
 
 

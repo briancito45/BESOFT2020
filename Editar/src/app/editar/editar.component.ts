@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServiceService } from '../Service/service.service';
-import { Campana } from '../interfaces/campana';
+import { Carga } from '../interfaces/carga';
 
 @Component({
   selector: 'app-editar',
@@ -10,7 +10,7 @@ import { Campana } from '../interfaces/campana';
 })
 export class EditarComponent implements OnInit {
 
-  campana:Campana = new Campana();
+  carga:Carga = new Carga();
   constructor(private router:Router,private service:ServiceService) { }
 
   ngOnInit() {
@@ -18,23 +18,30 @@ export class EditarComponent implements OnInit {
   }
 
   //Carga los datos y llena los campos 
+  //hace una peticion get por id para obtener los datos mas recientes
   Editar(){
     let id = localStorage.getItem("id");
-    this.service.getCampanaId(+id)
+    this.service.getCargaId(+id)
     .subscribe(
       data=>{
-        this.campana=data;
+        this.carga=data;
       })
   }
 
-  Actualizar(campana:Campana){
-    this.service.updateCampana(campana)
+  Actualizar(carga:Carga){
+    //valida que existan los campos y que no tengan espacios al inicio o al final
+    if((carga.frecuencia!= undefined && !(/^\s+|\s+$/.test(carga.frecuencia.toString()))) && (carga.hora!= undefined && !(/^\s+|\s+$/.test(carga.hora.toString())))) {
+      this.service.updateCarga(carga)
     .subscribe(
       data=>{
-        this.campana=data;
+        this.carga=data["response"]["dto"];
         alert("Se Actulizo con Exito!!!");
         this.router.navigate(["listar"]);
-      })
+      });
+    }else{
+      alert("Uno de los dos campos esta vacio o tiene espacios al inicio o al final");
+    }
+    
   }
 
 }

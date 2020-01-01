@@ -1,27 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {ServiceService} from '../Service/service.service';
-import { Campana } from '../interfaces/campana';
+import { Carga } from '../interfaces/carga';
 @Component({
   selector: 'app-listar',
   templateUrl: './listar.component.html',
   styleUrls: ['./listar.component.css']
 })
 export class ListarComponent implements OnInit {
-  campanas:Campana[];
+  cargas:Carga[];
   constructor(private service:ServiceService, private router:Router) { }
 
   ngOnInit() {
-     this.service.getCampana()
+     this.service.getCarga()
      .subscribe(data=>{
-        this.campanas = data;
-       
-     });
-     
+        this.cargas = data["response"]["dto"]; 
+     }); 
   }
 
-  Editar(campana:Campana):void{
-    localStorage.setItem("id",campana.id.toString());
+  Editar(carga:Carga):void{
+    localStorage.setItem("id",carga.idparametro.toString());
     this.router.navigate(["editar"])
   }
 
